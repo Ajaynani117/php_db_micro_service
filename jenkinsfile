@@ -1,5 +1,5 @@
 pipeline{    
-    agent any
+    agent none
     environment {
         image_name = 'ajaynani117/test:php$BUILD_NUMBER'
         DEV_SERVER = 'ec2-user@54.86.19.100'
