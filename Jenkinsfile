@@ -22,9 +22,9 @@ pipeline{
                     }
                 }
             }
-        }
+
         stage('run the php_db app on test server') {
-            steps {
+            steps{
                 script {
                     sshagent(['TEST_SERVER']) {
                         echo 'Run the docker image...'
@@ -39,6 +39,6 @@ pipeline{
                 }
             }
         }
-
+}
        
     
