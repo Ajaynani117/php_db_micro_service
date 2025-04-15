@@ -1,15 +1,13 @@
 pipeline{    
-    agent none
+    agent any
     environment {
-        image_name = 'ajaynani117/test:php$BUILD_NUMBER'
+        IMAGE_NAME = 'ajaynani117/test:php$BUILD_NUMBER'
         DEV_SERVER = 'ec2-user@54.86.19.100'
         TEST_SERVER = 'ec2-user@3.87.197.139'
     }
 
     stages {
         stage('Build the docker image for php and push to docker hub') {
-
-            agent any
 
             steps {
                 script {
@@ -18,9 +16,9 @@ pipeline{
                         echo 'Building the docker image...'
                         sh "scp -o StrictHostKeyChecking=no -r  devserverconfig ${DEV_SERVER}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no  ${DEV_SERVER}'bash ~/devserverconfig/docker-script.sh'" 
-                        sh "ssh ${DEV_SERVER}sudo  docker build -t ${image_name} /home/ec2-user/devserverconfig"   
+                        sh "ssh ${DEV_SERVER}sudo  docker build -t ${IMAGE_NAME} /home/ec2-user/devserverconfig"   
                         sh "ssh ${DEV_SERVER}sudo docker login -u $USERNAME -p $PASSWORD"
-                        sh "ssh ${DEV_SERVER}sudo docker push ${image_name}"
+                        sh "ssh ${DEV_SERVER}sudo docker push ${IMAGE_NAME}"
                     }
                   
                     }
@@ -28,9 +26,7 @@ pipeline{
             }
 
         stage('run the php_db app on test server') {
-            
-            agent any
-
+        
             steps{
                 script {
                     sshagent(['TEST_SERVER']){
@@ -39,7 +35,7 @@ pipeline{
                         sh "scp -o StrictHostKeyChecking=no -r  testserverconfig ${TEST_SERVER}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no  ${TEST_SERVER}'bash ~/testserverconfig/docker-script.sh'"  
                         sh "ssh ${TEST_SERVER}sudo docker login -u $USERNAME -p $PASSWORD"
-                        sh "ssh ${TEST_SERVER}bash /home/ec2-user/testserverconfig/compose-script.sh ${image_name}"
+                        sh "ssh ${TEST_SERVER}bash /home/ec2-user/testserverconfig/compose-script.sh ${IMAGE_NAME}"
                     
                     }
                   
