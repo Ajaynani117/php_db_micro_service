@@ -27,6 +27,7 @@ pipeline{
             steps{
                 script {
                     sshagent(['TEST_SERVER']) {
+                        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
                         echo 'Run the docker image...'
                         sh "scp -o StrictHostKeyChecking=no -r  testserverconfig ${TEST_SERVER}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no  ${TEST_SERVER}'bash ~/testserverconfig/docker-script.sh'"  
