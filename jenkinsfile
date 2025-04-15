@@ -8,7 +8,9 @@ pipeline{
 
     stages {
         stage('Build the docker image for php and push to docker hub') {
-            
+
+            agent any
+                        
             steps {
                 script {
                     sshagent(['DEV_SERVER'])  {
@@ -26,7 +28,9 @@ pipeline{
             }
 
         stage('run the php_db app on test server') {
-        
+            
+            agent any
+
             steps{
                 script {
                     sshagent(['TEST_SERVER']){
