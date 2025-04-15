@@ -1,5 +1,5 @@
 pipeline{    
-    agent any
+    agent none
     environment {
         image_name = 'ajaynani117/test:php$BUILD_NUMBER'
         DEV_SERVER = 'ec2-user@54.86.19.100'
@@ -10,7 +10,7 @@ pipeline{
         stage('Build the docker image for php and push to docker hub') {
 
             agent any
-                        
+
             steps {
                 script {
                     sshagent(['DEV_SERVER'])  {
