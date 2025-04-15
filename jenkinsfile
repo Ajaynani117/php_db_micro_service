@@ -11,7 +11,8 @@ pipeline{
             agent any
             steps {
                 script {
-                    sshagent(['DEV_SERVER'])  {
+                sshagent(['DEV_SERVER'])  {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) 
                         echo 'Building the docker image...'
                         sh "scp -o StrictHostKeyChecking=no -r  devserverconfig ${DEV_SERVER}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no  ${DEV_SERVER}'bash ~/devserverconfig/docker-script.sh'" 
